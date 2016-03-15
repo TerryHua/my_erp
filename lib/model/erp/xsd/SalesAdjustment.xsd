@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!-- Revision="$Revision: #2 $" -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!--
+	$Date: 2006/03/21 $
+
+	AMAZON.COM CONFIDENTIAL.  This document and the information contained in it are
+	confidential and proprietary information of Amazon.com and may not be reproduced, 
+	distributed or used, in whole or in part, for any purpose other than as necessary 
+	to list products for sale on the www.amazon.com web site pursuant to an agreement 
+	with Amazon.com.
+	-->
+	<xsd:include schemaLocation="amzn-base.xsd"/>
+	<xsd:include schemaLocation="TypeDefinitions.xsd"/>
+	<xsd:element name="SalesAdjustment">
+		<xsd:annotation>
+			<xsd:documentation>This report is generated for purchases and returns.  A negative quantity indicates a purchase (decrease in inventory); a positive quantity indicates a return.  This report is not generated at the order level.  
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="MarketplaceName"/>
+				<xsd:element name="OrderChannel" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="StoreIdentifier" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="DeliveryChannel" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="DeliveryStoreIdentifier" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="PaymentChannel" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="OrderDate" type="xsd:dateTime"/>
+				<xsd:element ref="SKU"/>
+				<xsd:element name="MerchantCatalogNumber" type="FortyStringNotNull" minOccurs="0"/>
+				<xsd:element name="Quantity" type="xsd:integer"/>
+				<xsd:element name="ItemPrice" type="CurrencyAmount"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
+
+

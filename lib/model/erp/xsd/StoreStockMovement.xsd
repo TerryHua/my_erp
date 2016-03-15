@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+   <!--												
+	    AMAZON.COM CONFIDENTIAL.  This document and the information contained in it are
+	    confidential and proprietary information of Amazon.com and may not be reproduced,
+	    distributed or used, in whole or in part, for any purpose other than as necessary
+	    to list products for sale on the www.amazon.com web site pursuant to an agreement
+	    with Amazon.com.	
+	    -->
+   <xsd:include schemaLocation="amzn-base.xsd"/>
+   <xsd:element name="StoreStockMovement">
+      <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element ref="MarketplaceName"/>
+            <xsd:element name="Shipment">
+               <xsd:complexType>
+                  <xsd:sequence>
+                     <xsd:element name="StoreID" type="xsd:string"/>
+                     <xsd:element ref="AmazonOrderID"/>
+                     <xsd:element ref="MerchantOrderID" minOccurs="0"/>
+                     <xsd:element ref="ShipmentID"/>
+                     <xsd:element name="MerchantShipmentID" type="xsd:string" minOccurs="0"/>
+                     <xsd:element name="ShipmentPaidStatus">
+                        <xsd:simpleType>
+                           <xsd:restriction base="xsd:string">
+                              <xsd:enumeration value="Paid"/>
+                              <xsd:enumeration value="Unpaid"/>
+                           </xsd:restriction>
+                        </xsd:simpleType>
+                     </xsd:element>
+                     <xsd:element name="ShipmentItem" maxOccurs="unbounded">
+                        <xsd:complexType>
+                           <xsd:sequence>
+                              <xsd:element ref="AmazonOrderItemCode"/>
+                              <xsd:element ref="MerchantOrderItemID" minOccurs="0"/>
+                              <xsd:element ref="SKU"/>
+                              <xsd:element name="Quantity" type="xsd:nonNegativeInteger"/>
+                              <xsd:element name="FromItemStatus" type="ItemStatusType"/>
+                              <xsd:element name="ToItemStatus" type="ItemStatusType"/>
+                              <xsd:element name="MovementID">
+                                 <xsd:simpleType>
+                                    <xsd:restriction base="xsd:normalizedString">
+                                       <xsd:maxLength value="40"/>
+                                    </xsd:restriction>
+                                 </xsd:simpleType>
+                              </xsd:element>
+                              <xsd:element name="MovementDate" type="xsd:dateTime"/>
+                           </xsd:sequence>
+                        </xsd:complexType>
+                     </xsd:element>
+                  </xsd:sequence>
+               </xsd:complexType>
+            </xsd:element>
+         </xsd:sequence>
+      </xsd:complexType>
+   </xsd:element>
+
+   <xsd:simpleType name="ItemStatusType">
+      <xsd:restriction base="xsd:string">
+         <xsd:enumeration value="Collected"/>
+         <xsd:enumeration value="Culled"/>
+         <xsd:enumeration value="Damaged"/>
+         <xsd:enumeration value="Dispatched"/>
+         <xsd:enumeration value="Missing"/>
+         <xsd:enumeration value="Rejected"/>
+         <xsd:enumeration value="Received"/>
+      </xsd:restriction>
+   </xsd:simpleType>
+
+</xsd:schema>

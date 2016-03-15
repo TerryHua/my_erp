@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<!-- "$Revision: #1 $" -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!--
+    $Date: 2005/10/21 $
+
+    AMAZON.COM CONFIDENTIAL.  This document and the information contained in it are
+    confidential and proprietary information of Amazon.com and may not be reproduced, 
+    distributed or used, in whole or in part, for any purpose other than as necessary 
+    to list products for sale on the www.amazon.com web site pursuant to an agreement 
+    with Amazon.com.
+    -->
+	<!-- This is an extended version of OrderNotificationReport.xsd. -->
+	<xsd:include schemaLocation="amzn-base.xsd"/>
+	<xsd:include schemaLocation="TypeDefinitions.xsd"/>
+	<xsd:include schemaLocation="CustomTypes.xsd"/>
+	<xsd:element name="PurchaseConfirmation">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Language" type="LanguageType" minOccurs="0"/>
+				<xsd:element name="OrderStatus" type="String"/>
+				<xsd:element name="OrderChannel" type="String" minOccurs="0"/>
+				<xsd:element name="StoreIdentifier" type="String" minOccurs="0"/>
+				<xsd:element name="DeliveryChannel" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="DeliveryStoreIdentifier" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="PaymentChannel" type="xsd:string" minOccurs="0"/>
+				<xsd:element ref="AmazonOrderID"/>
+				<xsd:element name="AmazonPurchaseID">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:length value="19" fixed="true"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element ref="MarketplaceName"/>
+				<xsd:element name="CustomerInformation">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="AmazonCustomerID"/>
+							<xsd:element name="Customer" type="Customer"/>
+							<xsd:element name="MarketingCommunicationOptedIn" type="xsd:boolean"
+								minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="AmazonSessionID" minOccurs="0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:pattern value="\d{3}-\d{7}-\d{7}"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="OrderDate" type="xsd:dateTime"/>
+				<xsd:element name="EmployeeIdentifier" type="xsd:string" minOccurs="0"/>
+				<xsd:element name="BillingData" type="BillingDataType" maxOccurs="unbounded"/>
+				<xsd:element name="FulfillmentData">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="FulfillmentMethod" minOccurs="0"/>
+							<xsd:element ref="ShipOption"/>
+							<xsd:element ref="Address" minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Item" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="AmazonOrderItemCode"/>
+							<xsd:element ref="SKU"/>
+							<xsd:element name="Title" type="LongString"/>
+							<xsd:element name="MerchantCatalogNumber" type="FortyStringNotNull"
+								minOccurs="0"/>
+							<xsd:element name="Color" type="String" minOccurs="0"/>
+							<xsd:element name="Size" type="String" minOccurs="0"/>
+							<xsd:element name="RangeCode" type="String" minOccurs="0"/>
+							<xsd:element name="Quantity" type="xsd:nonNegativeInteger"/>
+							<xsd:element name="ItemPrice" type="CurrencyAmount"/>
+							<xsd:element name="PriceOverrideReason" type="xsd:string" minOccurs="0"/>
+							<xsd:element name="GiftWrapLevel" type="StringNotNull" minOccurs="0"/>
+							<xsd:element name="GiftMessageText" minOccurs="0">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:maxLength value="500"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="Promotion" minOccurs="0" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="Name" type="StringNotNull"/>
+										<xsd:element name="ID" type="String"/>
+										<xsd:element name="Amount" type="CurrencyAmount"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Shipment" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ShipmentID" type="xsd:string"/>
+							<xsd:element name="MerchantShipmentID" type="xsd:string" minOccurs="0"/>
+							<xsd:element name="Warehouse" type="xsd:string"/>
+							<xsd:element name="FulfillmentData">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element ref="FulfillmentMethod" minOccurs="0"/>
+										<xsd:element ref="ShipOption"/>
+										<xsd:element ref="Address" minOccurs="0"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="SubTotal" type="CurrencyAmount"/>
+							<xsd:element name="ShipCharge" type="CurrencyAmount"/>
+							<xsd:element name="GiftWrapCharge" type="CurrencyAmount" minOccurs="0"/>
+							<xsd:element name="ShipmentItem" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element ref="AmazonOrderID"/>
+										<xsd:element ref="AmazonOrderItemCode"/>
+										<xsd:element ref="SKU"/>
+										<xsd:element name="Quantity" type="xsd:nonNegativeInteger"/>
+										<xsd:element name="ItemPrice" type="CurrencyAmount"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="ShipmentBillingData" type="BillingDataType"
+								minOccurs="0" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Adjustment" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="AdjustmentID" type="StringNotNull" minOccurs="0"/>
+							<xsd:element name="EmployeeIdentifier" type="xsd:string" minOccurs="0"/>
+							<xsd:element name="StoreIdentifier" type="xsd:string" minOccurs="0"/>
+							<xsd:element ref="MarketplaceName"/>
+							<xsd:element name="Fulfillment">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="PostedDate" type="xsd:dateTime"/>
+										<xsd:element name="AdjustedItem" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:sequence>
+												<xsd:element ref="AmazonOrderItemCode"/>
+												<xsd:element ref="MerchantOrderItemID"
+												minOccurs="0"/>
+												<xsd:element ref="SKU"/>
+												<xsd:element name="ItemPriceAdjustments"
+												type="BuyerPrice"/>
+												<xsd:element name="PromotionAdjustment"
+												minOccurs="0" maxOccurs="unbounded">
+												<xsd:complexType>
+												<xsd:sequence>
+												<xsd:element ref="MerchantPromotionID"/>
+												<xsd:element name="Type" type="StringNotNull"/>
+												<xsd:element name="Amount" type="CurrencyAmount"/>
+												</xsd:sequence>
+												</xsd:complexType>
+												</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Return" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="ReturnWarehouse" type="xsd:string" minOccurs="0"/>
+							<xsd:element name="ItemArrivalDate" type="xsd:dateTime" minOccurs="0"/>
+							<xsd:element name="ReturnDate" type="xsd:dateTime" minOccurs="0"/>
+							<xsd:element name="EmployeeIdentifier" type="xsd:string" minOccurs="0"/>
+							<xsd:element name="StoreIdentifier" type="xsd:string" minOccurs="0"/>
+							<xsd:element name="ReturnItem" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element ref="AmazonOrderID"/>
+										<xsd:element ref="AmazonOrderItemCode"/>
+										<xsd:element ref="SKU"/>
+										<xsd:element name="Quantity" type="xsd:nonNegativeInteger"/>
+										<xsd:element name="ReturnCode" type="xsd:string"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

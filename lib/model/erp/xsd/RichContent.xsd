@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!-- Revision="$Revision: #4 $" -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!--
+	$Date: 2009/05/13 $
+
+	AMAZON.COM CONFIDENTIAL.  This document and the information contained in it are
+	confidential and proprietary information of Amazon.com and may not be reproduced, 
+	distributed or used, in whole or in part, for any purpose other than as necessary 
+	to list products for sale on the www.amazon.com web site pursuant to an agreement 
+	with Amazon.com.
+	-->
+	<xsd:include schemaLocation="amzn-base.xsd"/>
+	<xsd:element name="RichContent">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="SKU"/>
+				<xsd:choice>
+					<xsd:element name="Video" type="VideoContent"/>
+					<xsd:element name="Audio" type="AudioContent"/>
+				</xsd:choice>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="VideoContent">
+		<xsd:sequence>
+			<xsd:element name="Clip" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:all>
+						<xsd:element name="ClipNumber" type="PositiveThreeDigitInteger"/>
+						<xsd:element name="Title" type="LongStringNotNull" minOccurs="1"/>
+						<xsd:element name="ThumbURL" type="RichContentURI" minOccurs="1"/>
+						<xsd:element name="ClipURL" type="RichContentURLStringNotNull" minOccurs="1"/>
+						<xsd:element name="Description" type="RichContentMediumStringNotNull" minOccurs="0"/>
+						<xsd:element name="RunTime" type="TwentyStringNotNull" minOccurs="0"/>
+					</xsd:all>
+					<xsd:attribute name="delete" type="xsd:boolean" use="optional"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AudioContent">
+		<xsd:sequence>
+			<xsd:element name="Disc" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="DiscNumber" type="PositiveThreeDigitInteger"/>
+						<xsd:element name="Track" maxOccurs="unbounded">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="TrackNumber" type="PositiveThreeDigitInteger"/>
+									<xsd:element name="TrackURL" type="RichContentURLStringNotNull" minOccurs="0"/>
+									<xsd:element name="TrackTitle" type="RichContentMediumStringNotNull" minOccurs="1"/>
+									<xsd:element name="Artist" type="RichContentShortStringNotNull" minOccurs="1"/>
+									<xsd:element name="Conductor" type="LongStringNotNull" minOccurs="0"/>
+									<xsd:element name="Composer" type="LongStringNotNull" minOccurs="0"/>
+									<xsd:element name="Description" type="RichContentMediumStringNotNull" minOccurs="0"/>
+									<xsd:element name="RunTime" type="TwentyStringNotNull" minOccurs="0"/>
+									<xsd:element name="Clip" minOccurs="0" maxOccurs="unbounded">
+										<xsd:complexType>
+											<xsd:all>
+												<xsd:element name="ClipNumber" type="PositiveThreeDigitInteger"/>
+												<xsd:element name="ClipURL" type="RichContentURLStringNotNull" minOccurs="0"/>
+												<xsd:element name="ClipTitle" type="RichContentMediumStringNotNull" minOccurs="1"/>
+												<xsd:element name="Description" type="RichContentMediumStringNotNull" minOccurs="0"/>
+												<xsd:element name="RunTime" type="TwentyStringNotNull" minOccurs="0"/>
+											</xsd:all>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+  <xsd:simpleType name="PositiveThreeDigitInteger">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="1"/>
+      <xsd:maxInclusive value="999"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="RichContentShortStringNotNull">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="100"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="RichContentMediumStringNotNull">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="300"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="RichContentURLStringNotNull">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="350"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="RichContentURI">
+    <xsd:restriction base="xsd:anyURI">
+      <xsd:maxLength value="350"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

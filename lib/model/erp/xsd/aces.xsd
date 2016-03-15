@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ****************************************************************************************************
+ACES xml schema definition
+(c)2003-2009 AAIA All rights reserved.
+
+Conventions:
+Standard xsd naming conventions often use UCC (UpperCamelCase) for elements/types, and LCC (lowerCamelCase)
+for attributes. In addition, it is customary to append "Type" to named types. Since several ACES elements
+end with the word "Type", we have elected to use LCC names for type definitions to avoid confusion.
+See http://xml.coverpages.org/camelCase.html.
+
+History:
+04/16/2003 - Preliminary Release.
+09/26/2003 - Added VcdbReleaseNumber tag.
+02/12/2004 - Changed root element from "AAIA" to "ACES". Split Mfr tag into TransmissionMfr and
+             TransferCaseMfr to allow correct identification.
+03/02/2004 - Change MfgCode in Header to MfrCode for consistency. Change VcdbReleaseNumber to
+             VcdbVersionDate. Add missing optional DisplayOrder tag. Change TransmissionControl
+             to TransmissionControlType to match documentation.
+06/01/2004 - Fix the BaseVehicle / SubModel problem in the App element.
+07/07/2004 - Changed the id attribute of the App tag to required to match spec.
+09/29/2004 - Changed App element to keep VehicleType from being used with Model.
+03/01/2006 - ACES 2.0 Support: Added VcdbVersionDate, QdbVersionDate, TransElecContolled,
+             and Qual. Added the validate attribute to App.
+             Also changed all vehicle attribute id's from implied to required. The element may be
+             optional, but all included vehicle attributes must use an id. Removed MfrLabel and Part
+             id attributes since they can only be free-form text.
+10/02/2006 - Fix spelling of TransElecControlled and add its missing ELEMENT definition. Add missing
+             ELEMENT definitions for QdbVersionDate and PcdbVersionDate.
+05/26/2009 - ACES 3.0. Drop support for dtd, xsd is now the master definition. Added named types with
+             restrictions where possible and reorganized the xsd to be more understandable. Dropped
+             RestraintType, TransferCase, TransferCaseBase, and TransferCaseMfr elements. Added support
+             for multi-branded files. Added support for Application Digital Assets. Added delivery tags
+             for PowerOutput and VehicleSubType. The documentation source attributes are not real web
+             pages, but are intended to reference the specification document.
+07/09/2009 - It was decided to remove VehicleSubType from the VCdb and so we must remove the delivery
+             element. VehicleType now contains the other-motive lowest level so everything works. 
+******************************************************************************************************* -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xml:lang="en" version="3.0">
+	<xs:annotation>
+		<xs:documentation>
+			AAIA ACES xml schema version 3.0 for exchanging Automotive Aftermarket catalog application data.
+			(c)2003-2009 AAIA All rights reserved.
+
+			We do not enforce a default namespace or "targetNamespace" with this release to minimize the changes
+			required to existing instance documents and procedures.
+		</xs:documentation>
+	</xs:annotation>
+
+	<!-- simple type definitions -->
+	<xs:simpleType name="acesVersionType">
+		<xs:annotation>
+			<xs:documentation source="http://www.xfront.com/Versioning.pdf">
+				Ties the instance document to a schema version.
+			</xs:documentation>
+		</xs:annotation>   
+		<xs:restriction base="xs:decimal">
+			<xs:enumeration value="1.0"/>
+			<xs:enumeration value="2.0"/>
+			<xs:enumeration value="3.0"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="actionType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="D"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="assetNameType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="45"/>			
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="brandType">
+		<xs:annotation>
+			<xs:documentation source="http://www.regular-expressions.info/xmlcharclass.html">
+				Ideally four uppercase chars without vowels but legacy included some vowels so we
+				exclude just the ones necessary for each character position.
+			</xs:documentation>
+		</xs:annotation>		
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[B-Z-[EIOU]][B-Z-[EIO]][B-Z-[OU]][A-Z]"/>
+		</xs:restriction>
+	</xs:simpleType>	
+
+	<xs:simpleType name="idType">
+		<xs:restriction base="xs:positiveInteger"/>
+	</xs:simpleType>
+
+	<xs:simpleType name="partNumberBaseType">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="0"/>
+			<xs:maxLength value="45"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="uomType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="mm"/>
+			<xs:enumeration value="cm"/>
+			<xs:enumeration value="in"/>
+			<xs:enumeration value="ft"/>			
+			<xs:enumeration value="mg"/>
+			<xs:enumeration value="g"/>
+			<xs:enumeration value="kg"/>
+			<xs:enumeration value="oz"/>
+			<xs:enumeration value="lb"/>
+			<xs:enumeration value="ton"/>
+		</xs:restriction>
+	</xs:simpleType> 
+
+	<xs:simpleType name="yearType">
+		<xs:restriction base="xs:positiveInteger">
+			<xs:minInclusive value="1896"/>
+			<xs:maxInclusive value="2015"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="yesnoType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="yes"/>
+			<xs:enumeration value="no"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- complex type definitions -->
+	<xs:complexType name="appItemsBaseType" abstract="true">
+		<xs:sequence>
+		  <xs:group   ref="vehicleIdentGroup"/>
+			<xs:element ref="MfrBodyCode" minOccurs="0"/>
+			<xs:element ref="BodyNumDoors" minOccurs="0"/>
+			<xs:element ref="BodyType" minOccurs="0"/>
+			<xs:element ref="DriveType" minOccurs="0"/>
+			<xs:element ref="EngineBase" minOccurs="0"/>
+			<xs:element ref="EngineDesignation" minOccurs="0"/>
+			<xs:element ref="EngineVIN" minOccurs="0"/>
+			<xs:element ref="EngineVersion" minOccurs="0"/>
+			<xs:element ref="EngineMfr" minOccurs="0"/>
+			<xs:element ref="PowerOutput" minOccurs="0"/>			
+			<xs:element ref="ValvesPerEngine" minOccurs="0"/>
+			<xs:element ref="FuelDeliveryType" minOccurs="0"/>
+			<xs:element ref="FuelDeliverySubType" minOccurs="0"/>
+			<xs:element ref="FuelSystemControlType" minOccurs="0"/>
+			<xs:element ref="FuelSystemDesign" minOccurs="0"/>
+			<xs:element ref="Aspiration" minOccurs="0"/>
+			<xs:element ref="CylinderHeadType" minOccurs="0"/>
+			<xs:element ref="FuelType" minOccurs="0"/>
+			<xs:element ref="IgnitionSystemType" minOccurs="0"/>
+			<xs:element ref="TransmissionMfrCode" minOccurs="0"/>
+			<xs:group   ref="transGroup" minOccurs="0"/>
+			<xs:element ref="TransElecControlled" minOccurs="0"/>
+			<xs:element ref="TransmissionMfr" minOccurs="0"/>
+			<xs:element ref="BedLength" minOccurs="0"/>
+			<xs:element ref="BedType" minOccurs="0"/>
+			<xs:element ref="WheelBase" minOccurs="0"/>
+			<xs:element ref="BrakeSystem" minOccurs="0"/>
+			<xs:element ref="FrontBrakeType" minOccurs="0"/>
+			<xs:element ref="RearBrakeType" minOccurs="0"/>
+			<xs:element ref="BrakeABS" minOccurs="0"/>
+			<xs:element ref="FrontSpringType" minOccurs="0"/>
+			<xs:element ref="RearSpringType" minOccurs="0"/>
+			<xs:element ref="SteeringSystem" minOccurs="0"/>
+			<xs:element ref="SteeringType" minOccurs="0"/>
+			<xs:element ref="Region" minOccurs="0"/>
+			<xs:element ref="Qual" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="Note" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="action"   type="actionType" use="required"/>
+		<xs:attribute name="id"       type="idType" use="required"/>
+		<xs:attribute name="ref"      type="xs:string"/>
+		<xs:attribute name="validate" type="yesnoType" default="yes"/>
+	</xs:complexType>	
+
+	<xs:complexType name="appType">
+		<xs:complexContent>
+			<xs:extension base="appItemsBaseType">
+				<xs:sequence>
+					<xs:element ref="Qty"/>
+					<xs:element ref="PartType"/>
+					<xs:element ref="MfrLabel" minOccurs="0"/>
+					<xs:element ref="Position" minOccurs="0"/>
+					<xs:element ref="Part"/>
+					<xs:element ref="DisplayOrder" minOccurs="0"/>
+					<xs:sequence minOccurs="0">
+						<xs:element ref="AssetName"/>
+						<xs:element ref="AssetItemOrder" minOccurs="0"/>
+						<xs:element ref="AssetItemRef" minOccurs="0"/>
+					</xs:sequence>					
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="assetType">
+		<xs:complexContent>
+			<xs:extension base="appItemsBaseType">
+				<xs:sequence>
+					<xs:element ref="AssetName" minOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>	
+
+	<xs:complexType name="noteType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="id" type="idType"/>
+				<xs:attribute name="lang">
+					<xs:simpleType>
+						<xs:restriction base="xs:NMTOKEN">
+							<xs:enumeration value="en"/>
+							<xs:enumeration value="fr"/>
+							<xs:enumeration value="sp"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="partNumberType">
+		<xs:simpleContent>
+			<xs:extension base="partNumberBaseType">
+				<xs:attribute name="BrandAAIAID" type="brandType"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:complexType name="partTypeType">
+		<xs:annotation>
+			<xs:documentation source="http://www.aftermarket.org/aces3.0/#section_5.7.2">
+				A Part Type references the primary key in the Parts PCdb table.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="id" type="idType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="positionType">
+		<xs:annotation>
+			<xs:documentation source="http://www.aftermarket.org/aces3.0/#section_5.7.14">
+				A Position references the primary key in the Position PCdb table.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="id" type="idType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="qualType">
+		<xs:sequence>
+			<xs:element name="param" type="paramType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="text"  type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="idType" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="paramType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="value"    type="xs:string" use="required"/>
+				<xs:attribute name="uom"      type="uomType"/>
+				<xs:attribute name="altvalue" type="xs:string"/>
+				<xs:attribute name="altuom"   type="uomType"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="vehAttrType">
+		<xs:annotation>
+			<xs:documentation source="http://www.aftermarket.org/aces3.0/#section_5.7.5">
+				Vehicle Attributes reference the primary key in the associated VCdb table.
+			</xs:documentation>
+		</xs:annotation>	
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="id" type="idType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="yearRangeType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="from" type="yearType" use="required"/>
+				<xs:attribute name="to"   type="yearType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<!-- document structure -->
+	<xs:element name="ACES">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Header"/>
+				<xs:element ref="App" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Asset" minOccurs="0" maxOccurs="unbounded"/>				
+				<xs:element ref="Footer"/>
+			</xs:sequence>
+			<xs:attribute name="version" type="acesVersionType" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- "Header" element definition -->
+	<xs:element name="Header">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Company"         type="xs:string"/>
+				<xs:element name="SenderName"      type="xs:string"/>
+				<xs:element name="SenderPhone"     type="xs:string"/>
+				<xs:element name="SenderPhoneExt"  type="xs:string" minOccurs="0"/>
+				<xs:element name="TransferDate"    type="xs:date"/>
+				<xs:element name="MfrCode"         type="xs:string" minOccurs="0"/>
+				<xs:element name="BrandAAIAID"     type="brandType" minOccurs="0"/>
+				<xs:element name="DocumentTitle"   type="xs:string"/>
+				<xs:element name="DocFormNumber"   type="xs:string" minOccurs="0"/>
+				<xs:element name="EffectiveDate"   type="xs:date"/>
+				<xs:element name="ApprovedFor"     type="xs:string" minOccurs="0"/>
+				<xs:element name="SubmissionType"  type="xs:string"/>
+				<xs:element name="MapperCompany"   type="xs:string" minOccurs="0"/>
+				<xs:element name="MapperContact"   type="xs:string" minOccurs="0"/>
+				<xs:element name="MapperPhone"     type="xs:string" minOccurs="0"/>
+				<xs:element name="MapperPhoneExt"  type="xs:string" minOccurs="0"/>
+				<xs:element name="MapperEmail"     type="xs:string" minOccurs="0"/>
+				<xs:element name="VcdbVersionDate" type="xs:date"/>
+				<xs:element name="QdbVersionDate"  type="xs:date"/>
+				<xs:element name="PcdbVersionDate" type="xs:date"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>	
+
+	<!-- Vehicle Identification Group definition -->
+	<xs:group name="vehicleIdentGroup">
+		<xs:annotation>
+			<xs:documentation source="http://www.aftermarket.org/aces3.0/#section_5.7.1">
+				Either a Base Vehicle (which includes a year) or a Make / Year-Range combination
+				must be included with each application. 
+			</xs:documentation>
+		</xs:annotation>	
+		<xs:choice>
+			<xs:sequence>
+				<xs:element ref="BaseVehicle"/>
+				<xs:element ref="SubModel" minOccurs="0"/>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element ref="Years"/>
+				<xs:element ref="Make"/>
+				<xs:choice minOccurs="0">
+					<xs:element ref="VehicleType"/>
+					<xs:sequence minOccurs="0">
+						<xs:element ref="Model"/>
+						<xs:element ref="SubModel" minOccurs="0"/>
+					</xs:sequence>
+				</xs:choice>
+			</xs:sequence>
+		</xs:choice>	
+	</xs:group>
+
+	<!-- Transmission Group dfinition -->
+	<xs:group name="transGroup">
+		<xs:choice>
+			<xs:element ref="TransmissionBase"/>
+			<xs:sequence>
+				<xs:element ref="TransmissionType" minOccurs="0"/>
+				<xs:element ref="TransmissionControlType" minOccurs="0"/>
+				<xs:element ref="TransmissionNumSpeeds" minOccurs="0"/>
+			</xs:sequence>
+		</xs:choice>
+	</xs:group>
+
+	<!-- element definitions  -->
+	<xs:element name="App"                     type="appType"/>
+	<xs:element name="Aspiration"              type="vehAttrType"/>
+	<xs:element name="Asset"                   type="assetType"/>
+	<xs:element name="AssetItemOrder"          type="xs:positiveInteger"/>
+	<xs:element name="AssetItemRef"            type="xs:string"/>	
+	<xs:element name="AssetName"               type="assetNameType"/>
+	<xs:element name="BaseVehicle"             type="vehAttrType"/>
+	<xs:element name="BedLength"               type="vehAttrType"/>
+	<xs:element name="BedType"                 type="vehAttrType"/>
+	<xs:element name="BodyNumDoors"            type="vehAttrType"/>
+	<xs:element name="BodyType"                type="vehAttrType"/>
+	<xs:element name="BrakeABS"                type="vehAttrType"/>
+	<xs:element name="BrakeSystem"             type="vehAttrType"/>
+	<xs:element name="CylinderHeadType"        type="vehAttrType"/>
+	<xs:element name="DisplayOrder"            type="xs:positiveInteger"/>
+	<xs:element name="DriveType"               type="vehAttrType"/>
+	<xs:element name="EngineBase"              type="vehAttrType"/>
+	<xs:element name="EngineDesignation"       type="vehAttrType"/>
+	<xs:element name="EngineMfr"               type="vehAttrType"/>
+	<xs:element name="EngineVIN"               type="vehAttrType"/>
+	<xs:element name="EngineVersion"           type="vehAttrType"/>
+	<xs:element name="FrontBrakeType"          type="vehAttrType"/>
+	<xs:element name="FrontSpringType"         type="vehAttrType"/>
+	<xs:element name="FuelDeliverySubType"     type="vehAttrType"/>
+	<xs:element name="FuelDeliveryType"        type="vehAttrType"/>
+	<xs:element name="FuelSystemControlType"   type="vehAttrType"/>
+	<xs:element name="FuelSystemDesign"        type="vehAttrType"/>
+	<xs:element name="FuelType"                type="vehAttrType"/>
+	<xs:element name="IgnitionSystemType"      type="vehAttrType"/>
+	<xs:element name="Make"                    type="vehAttrType"/>
+	<xs:element name="MfrBodyCode"             type="vehAttrType"/>
+	<xs:element name="MfrLabel"                type="xs:string"/>
+	<xs:element name="Model"                   type="vehAttrType"/>
+	<xs:element name="Note"                    type="noteType"/>
+	<xs:element name="Part"                    type="partNumberType"/>
+	<xs:element name="PartType"                type="partTypeType"/>
+	<xs:element name="Position"                type="positionType"/>
+	<xs:element name="PowerOutput"             type="vehAttrType"/>	
+	<xs:element name="Qty"                     type="xs:string"/>
+	<xs:element name="Qual"                    type="qualType"/>
+	<xs:element name="RearBrakeType"           type="vehAttrType"/>
+	<xs:element name="RearSpringType"          type="vehAttrType"/>
+	<xs:element name="Region"                  type="vehAttrType"/>
+	<xs:element name="SteeringSystem"          type="vehAttrType"/>
+	<xs:element name="SteeringType"            type="vehAttrType"/>
+	<xs:element name="SubModel"                type="vehAttrType"/>
+	<xs:element name="TransElecControlled"     type="vehAttrType"/>
+	<xs:element name="TransferDate"            type="xs:date"/>
+	<xs:element name="TransmissionBase"        type="vehAttrType"/>
+	<xs:element name="TransmissionControlType" type="vehAttrType"/>
+	<xs:element name="TransmissionMfr"         type="vehAttrType"/>
+	<xs:element name="TransmissionMfrCode"     type="vehAttrType"/>
+	<xs:element name="TransmissionNumSpeeds"   type="vehAttrType"/>
+	<xs:element name="TransmissionType"        type="vehAttrType"/>
+	<xs:element name="ValvesPerEngine"         type="vehAttrType"/>
+	<xs:element name="VehicleType"             type="vehAttrType"/>
+	<xs:element name="WheelBase"               type="vehAttrType"/>
+	<xs:element name="Years"                   type="yearRangeType"/>
+
+	<!-- "Footer" element definition -->
+	<xs:element name="Footer">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="RecordCount" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

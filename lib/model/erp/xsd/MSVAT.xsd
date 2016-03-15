@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!-- Revision="$Revision: #1 $" -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!--    $Date: 2006/04/10 $
+    AMAZON.COM CONFIDENTIAL.  This document and the information contained in it are confidential and 
+    proprietary information of Amazon.com and may not be reproduced, distributed or used, in whole or 
+    in part, for any purpose other than as necessary to list products for sale on the www.amazon.com 
+    web site pursuant to an agreement with Amazon.com.  
+-->
+	<xsd:include schemaLocation="amzn-base.xsd"/>
+	<xsd:include schemaLocation="TypeDefinitions.xsd"/>
+	<xsd:element name="MSVat">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="MarketplaceName"/>
+				<xsd:element ref="SKU"/>
+				<xsd:element name="VATCode" type="xsd:string"/>
+				<xsd:element name="VATRate">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:decimal">
+							<xsd:totalDigits value="5"/>
+							<xsd:fractionDigits value="2"/>
+							<xsd:maxInclusive value="100.00"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="VATPercentage">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:decimal">
+							<xsd:totalDigits value="5"/>
+							<xsd:fractionDigits value="2"/>
+							<xsd:maxInclusive value="100.00"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="StartDate" type="xsd:date"/>
+				<xsd:element name="EndDate" type="xsd:date" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

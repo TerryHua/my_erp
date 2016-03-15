@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!-- "$Revision: #1 $" -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!--
+    $Date: 2006/06/19 $
+
+    AMAZON.COM CONFIDENTIAL.  This document and the information contained in it are
+    confidential and proprietary information of Amazon.com and may not be reproduced, 
+    distributed or used, in whole or in part, for any purpose other than as necessary 
+    to list products for sale on the www.amazon.com web site pursuant to an agreement 
+    with Amazon.com.
+    -->
+	<xsd:include schemaLocation="amzn-base.xsd"/>
+	<xsd:element name="PointOfSale">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="MerchantOrderID"/>
+				<xsd:element ref="ExternalCustomerID"/>
+				<xsd:element ref="MarketplaceName"/>
+				<xsd:element name="OrderDate" type="xsd:dateTime"/>
+				<xsd:element name="Item" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="OrderItemLineID"/>
+							<xsd:element name="EventID">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string"/>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="EventType">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:enumeration value="Add"/>
+										<xsd:enumeration value="Delete"/>
+										<xsd:enumeration value="Update"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="EventDate" type="xsd:dateTime"/>
+							<xsd:element name="EventSourceCode">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:enumeration value="1"/>
+										<xsd:enumeration value="2"/>
+										<xsd:enumeration value="3"/>
+										<xsd:enumeration value="4"/>
+										<xsd:enumeration value="5"/>
+										<xsd:enumeration value="11"/>
+										<xsd:enumeration value="12"/>
+										<xsd:enumeration value="13"/>
+										<xsd:enumeration value="14"/>
+										<xsd:enumeration value="30"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="EventSourceDescription" minOccurs="0"/>
+							<xsd:element ref="SKU"/>
+							<xsd:element name="Quantity" type="xsd:positiveInteger"/>
+							<xsd:element name="IsGift" type="xsd:boolean"/>
+							<!-- EventSourceCode Values
+							    1 = order cancelled,
+							    2 = order uncancelled,
+							    3 = order has become a gift,
+							    4 = order is no longer a gift,
+							    5 = order was deleted,
+							    11 = item was added,
+							    12 = item was cancelled,
+							    13 = item was uncancelled,
+							    14 = item was deleted,
+							    30 = used item was added-->
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

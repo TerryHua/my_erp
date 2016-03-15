@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!-- Revision="$Revision: #2 $" -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!--
+    $Date: 2006/05/24 $
+
+    AMAZON.COM CONFIDENTIAL.  This document and the information contained in it are
+    confidential and proprietary information of Amazon.com and may not be reproduced, 
+    distributed or used, in whole or in part, for any purpose other than as necessary 
+    to list products for sale on the www.amazon.com web site pursuant to an agreement 
+    with Amazon.com.
+    -->
+	<xsd:include schemaLocation="amzn-base.xsd"/>
+	<xsd:include schemaLocation="CustomTypes.xsd"/>
+	<xsd:element name="ExternalOrder">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="MarketplaceName"/>
+				<xsd:element ref="MerchantOrderID"/>
+				<xsd:element ref="ExternalCustomerID" />
+				<xsd:element name="BillingCustomer" type="Customer" minOccurs="0"/>
+				<xsd:element name="OrderDate" type="xsd:dateTime"/>
+				<xsd:element name="CompletionDate" type="xsd:dateTime" minOccurs="0"/>
+				<xsd:element name="OrderStatus" type="StringNotNull"/>
+				<xsd:element ref="CustomerPayment" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="RefundIssued" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="TotalDiscount" type="CurrencyAmount" minOccurs="0"/>
+				<xsd:element name="OrderDiscount" type="Discount" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element name="TotalTax" type="CurrencyAmount" minOccurs="0"/>
+				<xsd:element name="TotalShipping" type="CurrencyAmount" minOccurs="0"/>
+				<xsd:element name="TotalGiftCharge" type="CurrencyAmount" minOccurs="0"/>
+				<xsd:element name="GrossOrderValue" type="CurrencyAmount"/>
+				<xsd:element ref="OrderItem" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="Shipment" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="OrderAnnotation"  type="Annotation" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="AdditionalAttribute" type="NameValuePair" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

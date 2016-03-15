@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<!-- Revision="$Revision: #7 $" -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<!--
+	$Date: 2007/05/21 $
+	
+	AMAZON.COM CONFIDENTIAL.  This document and the information contained in it are
+	confidential and proprietary information of Amazon.com and may not be reproduced, 
+	distributed or used, in whole or in part, for any purpose other than as necessary 
+	to list products for sale on the www.amazon.com web site pursuant to an agreement 
+	with Amazon.com.
+	-->
+	<xsd:include schemaLocation="amzn-base.xsd"/>
+	<xsd:include schemaLocation="ExternalCustomer.xsd"/>
+	<xsd:include schemaLocation="TypeDefinitions.xsd"/>
+	<xsd:complexType name="BillingDataType">
+		<xsd:sequence>
+			<xsd:element name="BuyerEmailAddress" type="EmailAddressType" minOccurs="0"/>
+			<xsd:element name="BuyerName" type="String"/>
+			<xsd:element name="BuyerPhoneNumber" type="String" minOccurs="0"/>
+			<xsd:element name="PaymentData" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Type" type="StringNotNull"/>
+						<xsd:element name="Identifier" type="StringNotNull" minOccurs="0"/>
+						<xsd:element name="Issuer" type="StringNotNull" minOccurs="0"/>
+						<xsd:element name="Tail" minOccurs="0">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string">
+									<xsd:pattern value="\d{4}"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="EncryptedCreditCardNumber" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="Amount" type="CurrencyAmount" minOccurs="0"/>
+						<xsd:element ref="Address" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="OrderItem">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="MerchantOrderItemID"/>
+				<xsd:element name="OrderItemStatus" type="StringNotNull"/>
+				<xsd:element ref="ExternalProduct"/>
+				<xsd:element name="Quantity" type="xsd:nonNegativeInteger"/>
+				<xsd:element name="ItemPrice" type="CurrencyAmount"/>
+				<xsd:element name="Tax" type="CurrencyAmount" minOccurs="0"/>
+				<xsd:element name="TotalItemDiscount" type="CurrencyAmount" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Sum of all discounts applied to this OrderItem.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="OrderItemDiscount" type="Discount" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Detail information for all discounts applied to this OrderItem.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="OrderItemAnnotation" type="Annotation" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Human readable information attached to OrderItem for Customer Service or similar purposes.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ReturnedQuantity" type="xsd:nonNegativeInteger" minOccurs="0"/>
+				<xsd:element name="TotalPrice" type="CurrencyAmount"/>
+				<xsd:element name="AdditionalAttribute" type="NameValuePair" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>Vector of name value pairs containing non-standard attributes.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="Shipment">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="ExternalShipmentID" type="StringNotNull"/>
+				<xsd:element ref="Address"/>
+				<xsd:element name="ShipmentStatus" type="StringNotNull"/>
+				<xsd:element name="ShipDate" type="xsd:dateTime"/>
+				<xsd:element name="DeliveryCustomer" type="Customer" minOccurs="0"/>
+				<xsd:element name="ShipCost" type="CurrencyAmount" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Actual shipping cost to shipper.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ShipCharge" type="CurrencyAmount" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Amount customer was charged for shipping.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="RefundedShipCharge" type="CurrencyAmount" minOccurs="0"/>
+				<xsd:element name="GiftCharge" type="CurrencyAmount"/>
+				<xsd:element name="RefundedGiftCharge" type="CurrencyAmount"/>
+				<xsd:element name="ShipMethod" type="StringNotNull" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Free text that is a combination of shipping carrier and service e.g.UPS_GROUND.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ShipOption" type="StringNotNull" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Free text that contains ship speed and may contain locale e.g.econ-us, next(for next day) etc.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="TrackingNumber" type="StringNotNull" minOccurs="0"/>
+				<xsd:element ref="ShipmentItem" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="AdditionalAttribute" type="NameValuePair" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ShipmentItem">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="ExternalShipmentItemID" type="StringNotNull"/>
+				<xsd:element name="Quantity" type="xsd:nonNegativeInteger"/>
+				<xsd:element name="ExternalOrderItemID" type="StringNotNull">
+					<xsd:annotation>
+						<xsd:documentation>A link to the OrderItem that related to this ShipmentItem.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="ReturnedQuantity" type="xsd:nonNegativeInteger" minOccurs="0"/>
+				<xsd:element name="Status" type="StringNotNull" minOccurs="0"/>
+				<xsd:element name="AdditionalAttribute" type="NameValuePair" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="ExternalProduct">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Title" type="LongStringNotNull"/>
+				<xsd:element name="Description" type="TwoThousandString" minOccurs="0"/>
+				<xsd:element ref="StandardProductID" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>A universal(i.e.non-company-specific) identifier for a product e.g.UPC.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element ref="SKU"/>
+				<xsd:element name="AdditionalAttribute" type="NameValuePair" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="PaymentInstrument">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Type" type="StringNotNull">
+					<xsd:annotation>
+						<xsd:documentation>Free text specifying type of payment instrument e.g. Cash,CreditCard, GiftVoucher.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="PaymentInstrumentID" type="StringNotNull" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>e.g. a credit card number or gift voucher number.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="Issuer" type="StringNotNull" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Entity issuing the credit card e.g. VISA, Mastercard.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="CreditCardTail" minOccurs="0">
+					<xsd:simpleType>
+						<xsd:restriction base="StringNotNull">
+							<xsd:pattern value="\d{4}"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="CustomerPayment">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="PaymentID" type="StringNotNull" minOccurs="0"/>
+				<xsd:element ref="PaymentInstrument"/>
+				<xsd:element name="PaymentDate" type="xsd:dateTime"/>
+				<xsd:element name="Amount" type="CurrencyAmount"/>
+				<xsd:element name="AdditionalAttribute" type="NameValuePair" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="RefundIssued">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="RefundID" type="StringNotNull"/>
+				<xsd:element ref="PaymentInstrument"/>
+				<xsd:element name="RefundCustomer" type="Customer" minOccurs="0"/>
+				<xsd:element name="RefundDate" type="xsd:dateTime"/>
+				<xsd:element name="Amount" type="CurrencyAmount"/>
+				<xsd:element name="Status" type="StringNotNull" minOccurs="0"/>
+				<xsd:element name="OriginalPaymentID" type="StringNotNull" minOccurs="0"/>
+				<xsd:element name="RefundReason" type="StringNotNull"/>
+				<xsd:element name="AddressID" type="StringNotNull" minOccurs="0"/>
+				<xsd:element name="RefundType" type="StringNotNull" minOccurs="0">
+					<xsd:annotation>
+						<xsd:documentation>Text from clients system specifying refund type e.g. GOODWILL.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="Annotation">
+		<xsd:sequence>
+			<xsd:element name="AnnotationIdentifier" type="NameValuePair" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Vector of name-value pairs that together uniquely identify Annotation(i.e. form a key).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AnnotationType" type="StringNotNull" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Used to distinguish between types of Annotation e.g. CustomerContact versus OrderComment.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Comment" type="StringNotNull" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Meta annotation about this annotation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AnnotationDate" type="xsd:dateTime" minOccurs="0"/>
+			<xsd:element name="AnnotationLine" type="TwoThousandString" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>The main content of the annotation itself e.g. a letter to a customer.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="AdditionalAttribute" type="NameValuePair" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Additional attributes related to the Annotation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Discount">
+		<xsd:sequence>
+			<xsd:element name="DiscountID" type="StringNotNull" minOccurs="0"/>
+			<xsd:element name="DiscountAmount" type="CurrencyAmount" minOccurs="0"/>
+			<xsd:element name="DiscountDescription" type="LongStringNotNull" minOccurs="0"/>
+			<xsd:element name="PromotionID" type="StringNotNull" minOccurs="0"/>
+			<xsd:element name="PromotionDescription" type="LongStringNotNull" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Promotion">
+		<xsd:sequence>
+			<xsd:element name="ClaimCode" type="StringNotNull" minOccurs="0"/>
+			<xsd:element name="Name" type="HundredString"/>
+			<xsd:element name="MerchantPromotionID">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:normalizedString">
+						<xsd:maxLength value="80"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="Category" type="String"/>
+			<xsd:element name="Amount" type="CurrencyAmount"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="TransactionChannel">
+		<xsd:restriction base="StringNotNull">
+			<xsd:enumeration value="Online"/>
+			<xsd:enumeration value="InStore"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<!-- Revision="$Revision: #4 $" -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<!--
+	$Date: 2005/04/01 $ AMAZON.COM CONFIDENTIAL.  This document and the
+	information contained in it are confidential and proprietary information
+	of Amazon.com and may not be reproduced,distributed or used, in whole or
+	in part, for any purpose other than as necessary to list products for sale
+	on the www.amazon.com web site pursuant to an agreement with Amazon.com.
+	-->
+	<xsd:include schemaLocation="amzn-base.xsd"/>
+	<xsd:include schemaLocation="LanguageCodes.xsd"/>
+	
+	<xsd:element name="Local">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="ListingName" type="MediumStringNotNull" />
+                <!--
+				commenting this out for the time being. it's more restrictive
+				than we actually need, and just makes things more complicated
+				than they need to be.
+				<xsd:element name="ListingID">
+					<xsd:complexType>
+						<xsd:choice>
+							<xsd:element name="Acxiom">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="A\d{10}"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="Franchise">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="F\d{10}"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="OwnerSubmitted">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:pattern value="O\d{10}"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:choice>
+					</xsd:complexType>
+				</xsd:element>
+                -->
+				<xsd:element name="ListingID" type="FortyStringNotNull" />
+				<xsd:element ref="LocationData" minOccurs="0"/>
+				<xsd:element ref="ContactData" minOccurs="0"/>
+				<xsd:element ref="CategoryData" minOccurs="0"/>
+				<xsd:element ref="OperationalData" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="LocationData">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="StreetAddress" minOccurs="0" maxOccurs="3" >
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:maxLength value="100"/>
+                            <xsd:minLength value="1"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+				<xsd:element name="City" type="FortyStringNotNull" minOccurs="0" />
+				<xsd:element name="State">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="AL"/>
+							<xsd:enumeration value="AK"/>
+							<xsd:enumeration value="AZ"/>
+							<xsd:enumeration value="AR"/>
+							<xsd:enumeration value="CA"/>
+							<xsd:enumeration value="CO"/>
+							<xsd:enumeration value="CT"/>
+							<xsd:enumeration value="DC"/>
+							<xsd:enumeration value="DE"/>
+							<xsd:enumeration value="FL"/>
+							<xsd:enumeration value="GA"/>
+							<xsd:enumeration value="HI"/>
+							<xsd:enumeration value="ID"/>
+							<xsd:enumeration value="IL"/>
+							<xsd:enumeration value="IN"/>
+							<xsd:enumeration value="IA"/>
+							<xsd:enumeration value="KS"/>
+							<xsd:enumeration value="KY"/>
+							<xsd:enumeration value="LA"/>
+							<xsd:enumeration value="ME"/>
+							<xsd:enumeration value="MD"/>
+							<xsd:enumeration value="MA"/>
+							<xsd:enumeration value="MI"/>
+							<xsd:enumeration value="MN"/>
+							<xsd:enumeration value="MS"/>
+							<xsd:enumeration value="MO"/>
+							<xsd:enumeration value="MT"/>
+							<xsd:enumeration value="NE"/>
+							<xsd:enumeration value="NV"/>
+							<xsd:enumeration value="NH"/>
+							<xsd:enumeration value="NJ"/>
+							<xsd:enumeration value="NM"/>
+							<xsd:enumeration value="NY"/>
+							<xsd:enumeration value="NC"/>
+							<xsd:enumeration value="ND"/>
+							<xsd:enumeration value="OH"/>
+							<xsd:enumeration value="OK"/>
+							<xsd:enumeration value="OR"/>
+							<xsd:enumeration value="PA"/>
+							<xsd:enumeration value="RI"/>
+							<xsd:enumeration value="SC"/>
+							<xsd:enumeration value="SD"/>
+							<xsd:enumeration value="TN"/>
+							<xsd:enumeration value="TX"/>
+							<xsd:enumeration value="UT"/>
+							<xsd:enumeration value="VT"/>
+							<xsd:enumeration value="VA"/>
+							<xsd:enumeration value="WA"/>
+							<xsd:enumeration value="WV"/>
+							<xsd:enumeration value="WI"/>
+							<xsd:enumeration value="WY"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="Zip" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="Base">
+								<xsd:simpleType>
+									<xsd:restriction base="NumericString">
+										<xsd:length value="5"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="Extension" minOccurs="0">
+								<xsd:simpleType>
+									<xsd:restriction base="NumericString">
+										<xsd:length value="4"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="Latitude" minOccurs="0" >
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:decimal">
+							<xsd:totalDigits value="8"/>
+							<xsd:fractionDigits value="6"/>
+							<xsd:maxInclusive value="90.000000"/>
+							<xsd:minInclusive value="-90.000000"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="Longitude" minOccurs="0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:decimal">
+							<xsd:totalDigits value="9"/>
+							<xsd:fractionDigits value="6"/>
+							<xsd:maxInclusive value="180.000000"/>
+							<xsd:minInclusive value="-180.000000"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="ContactData">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="AlternateName" type="MediumStringNotNull" minOccurs="0" maxOccurs="10"/>
+				<xsd:element name="Phone" type="PhoneNumberString" minOccurs="0" />
+				<xsd:element name="Fax" type="PhoneNumberString" minOccurs="0"/>
+				<xsd:element name="Email" minOccurs="0" >
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:pattern value="[\w\._\-]+@([\w_\-]+\.)+\w+"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="Website" type="MediumStringNotNull" minOccurs="0" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="CategoryData">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Affiliation" type="MediumStringNotNull" minOccurs="0" maxOccurs="3"	/>
+				<xsd:element name="Qualification" type="MediumStringNotNull" minOccurs="0" maxOccurs="3"  />
+				<xsd:element name="Specialty" type="MediumStringNotNull" minOccurs="0" maxOccurs="3"  />
+				<xsd:element name="Description" minOccurs="0">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:normalizedString">
+							<xsd:maxLength value="1500"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="Facility" type="MediumStringNotNull" minOccurs="0" maxOccurs="10"  />
+				<xsd:element name="AvailableLanguage" type="AmazonLanguageCode" minOccurs="0" maxOccurs="3"  />
+				<xsd:element name="ServiceAvailability" minOccurs="0" maxOccurs="9" >
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="Appointments Available" />
+							<xsd:enumeration value="Delivery" />
+							<xsd:enumeration value="Dine In" />
+							<xsd:enumeration value="In Home" />
+							<xsd:enumeration value="On Site" />
+							<xsd:enumeration value="Same Day" />
+							<xsd:enumeration value="Take Out" />
+							<xsd:enumeration value="Walk In" />
+							<xsd:enumeration value="While You Wait" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="BDCCode" minOccurs="0" maxOccurs="6" >
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:pattern value="\d{8}"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="AvailableBrand" type="FortyStringNotNull" minOccurs="0" maxOccurs="10"  />
+				<xsd:element name="SearchTerm" type="FortyStringNotNull" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element name="NAICSCode" minOccurs="0" maxOccurs="6" >
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:pattern value="\d{10}"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="SICCode" minOccurs="0" maxOccurs="6" >
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:pattern value="\d{8}"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="OperationalData">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="AcceptedPayment" minOccurs="0" maxOccurs="6">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="American Express"/>
+							<xsd:enumeration value="Check"/>
+							<xsd:enumeration value="Diners Club"/>
+							<xsd:enumeration value="Discover"/>
+							<xsd:enumeration value="Mastercard"/>
+							<xsd:enumeration value="Visa"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="AppointmentNeeded" type="xsd:boolean" minOccurs="0"/>
+				<xsd:element name="HoursOfOperation" type="FortyStringNotNull" minOccurs="0" />
+				<xsd:element name="ParkingAvailability" minOccurs="0" maxOccurs="6">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="Free"/>
+							<xsd:enumeration value="Garage"/>
+							<xsd:enumeration value="Metered"/>
+							<xsd:enumeration value="On Street"/>
+							<xsd:enumeration value="Valet"/>
+							<xsd:enumeration value="Validation"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:element>
+				<xsd:element name="Rates" type="MediumStringNotNull" minOccurs="0"/>
+				<xsd:element name="StaffMember" minOccurs="0" maxOccurs="30" >
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="MemberName" type="FortyStringNotNull"/>
+							<xsd:element name="Description" type="MediumStringNotNull" minOccurs="0"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="TransitOption" minOccurs="0" maxOccurs="5">
+					<xsd:complexType>
+						<xsd:simpleContent>
+							<xsd:extension base="FortyStringNotNull">
+								<xsd:attribute name="transitType">
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:string">
+											<xsd:enumeration value="Bus"/>
+											<xsd:enumeration value="Major Thoroughfare"/>
+											<xsd:enumeration value="Subway"/>
+											<xsd:enumeration value="Train"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:attribute>
+							</xsd:extension>
+						</xsd:simpleContent>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:simpleType name="PhoneNumberString">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="\s*(\s*1\s*-?)?\s*\(?\s*\d{3}\s*\)?\s*-?\s*\d{3}\s*-?\s*\d{4}\s*" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="NumericString">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="\d*"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+</xsd:schema>
+
