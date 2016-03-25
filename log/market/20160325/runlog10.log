@@ -1,0 +1,6 @@
+2016-03-25 10:48:50 ::1 Request:http://localhost/www/my_erp/webmarket/user/index [Info]  runtime in 1 ms 
+2016-03-25 10:48:50 ::1 Request:http://localhost/www/my_erp/webmarket/user/top.html [Info]  runtime in 1 ms 
+2016-03-25 10:48:50 ::1 Request:http://localhost/www/my_erp/webmarket/user/hiddenbtn [Info]  runtime in 1 ms 
+2016-03-25 10:48:50 ::1 Request:http://localhost/www/my_erp/webmarket/user/right [Info]  runtime in 2 ms 
+2016-03-25 10:48:50 ::1 Request:http://localhost/www/my_erp/webmarket/user/left [Info]  runtime in 17 ms 
+2016-03-25 10:48:52 ::1 Request:http://localhost/www/my_erp/webmarket/account/index.html [Info]  runtime in 20 ms 
