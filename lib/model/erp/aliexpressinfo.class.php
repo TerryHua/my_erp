@@ -1,6 +1,6 @@
 <?php
 /**
- * 信息管理模块
+ * aliexpres商品信息抓取模块
  * @author huaxiaofeng
  * @version 1.0 2014-11-11 22:50:31
  */
